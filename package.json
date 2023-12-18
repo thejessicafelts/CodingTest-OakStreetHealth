@@ -12,9 +12,12 @@
   "devDependencies": {
     "@vitest/ui": "latest",
     "vite": "^2.9.9",
-    "vitest": "latest"
+    "vitest": "^1.0.3"
   },
   "stackblitz": {
     "startCommand": "npm run test:ui"
-  }
+  },
+  "description": "Run `npm test` and change a test or source code to see HMR in action!",
+  "version": "1.0.0",
+  "author": ""
 }

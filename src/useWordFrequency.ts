@@ -1,54 +1,53 @@
 /**
  * @param { string } userText A block of text from the user to analyze
+ * @param { number } limit The amount of results to return
  * @return { object } Word frequency data
  */
 export function useWordFrequency(userText: string, limit: number = 1) {
   /**
-   * @param { number } limit The amount of results to return
    * @return { string[] } The words with the highest usage in the user text
    */
-  function getMostUsedWords(limit: number): string[] {
-    // Strips punctuation and converts to lowercase
-    const cleanText = userText
-      .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, '')
-      .toLowerCase();
+  function getMostUsedWords(): string[] {
+    const words = userText
+      .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, '') // Cleaning text.
+      .toLowerCase() // Converting to Lowercase.
+      .split(/\s+/) // Splitting words.
 
-    // Splits words into array
-    const words = cleanText.split(/\s+/);
+    const wordFrequency = words.reduce((acc, word) => {
+      acc[word] = (acc[word] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
 
-    // Frequency of Words
-    const wordFrequency = {};
-    words.forEach((word) => {
-      wordFrequency[word] = (wordFrequency[word] || 0) + 1;
-    });
+    const sortedWords = Object.entries(wordFrequency).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
 
-    let mostUsedWord;
-    let highestWordFrequency = 0;
-    let leastUsedWord;
+    const mostUsedWordArray = sortedWords.slice(0, limit).map(([word]) => word);
 
-    for (const word in wordFrequency) {
-      if (wordFrequency[word] > highestWordFrequency) {
-        mostUsedWord = word;
-        highestWordFrequency = wordFrequency[word];
-      }
-    }
-
-    const testArray = [mostUsedWord];
-    console.log('Words: ', mostUsedWord);
-
-    return testArray;
+    return mostUsedWordArray;
   }
 
   /**
-   * @param { number } limit The amount of results to return
    * @return { string[] } The words with the lowest usage in the user text
    */
-  function getLeastUsedWords(limit: number): string[] {
-    return [];
+  function getLeastUsedWords(): string[] {
+    const words = userText
+      .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, '') // Cleaning text.
+      .toLowerCase() // Converting to Lowercase.
+      .split(/\s+/) // Splitting words.
+
+    const wordFrequency = words.reduce((acc, word) => {
+      acc[word] = (acc[word] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+
+    const sortedWords = Object.entries(wordFrequency).sort((a, b) => a[1] - b[1] || a[0].localeCompare(b[0]));
+
+    const leastUsedWordArray = sortedWords.slice(0, limit).map(([word]) => word);
+
+    return leastUsedWordArray;
   }
 
   return {
-    mostUsedWords: getMostUsedWords(limit),
-    leastUsedWords: getLeastUsedWords(limit),
+    mostUsedWords: getMostUsedWords(),
+    leastUsedWords: getLeastUsedWords(),
   };
 }
